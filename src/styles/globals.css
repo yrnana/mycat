@@ -1,0 +1,21 @@
+html {
+  font-size: 18px;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply subpixel-antialiased leading-relaxed;
+}
+
+.unset-img {
+  span {
+    position: unset !important;
+  }
+  img {
+    position: relative !important;
+    height: unset !important;
+  }
+}
