@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { ErrorResponse, GetFestivalResponse } from '~/@types';
+import type { ErrorResponse, GetEventResponse } from '~/@types';
 import { prisma } from '~/helpers/prisma';
 
 export const config = {
@@ -8,7 +8,7 @@ export const config = {
   },
 };
 
-// /api/festivals/:id
+// /api/events/:id
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -21,15 +21,15 @@ export default async function handle(
   }
 }
 
-// GET /api/festivals/:id
+// GET /api/events/:id
 async function handleGET(
   req: NextApiRequest,
-  res: NextApiResponse<GetFestivalResponse | ErrorResponse>,
+  res: NextApiResponse<GetEventResponse | ErrorResponse>,
 ) {
-  const postId = req.query.id;
-  const result = await prisma.festival.findUnique({
+  const eventId = req.query.id;
+  const result = await prisma.event.findUnique({
     where: {
-      id: Number(postId),
+      id: String(eventId),
     },
     include: {
       dates: {

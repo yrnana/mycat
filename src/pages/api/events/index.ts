@@ -3,9 +3,9 @@ import { sortBy } from 'lodash-es';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type {
   ErrorResponse,
-  GetFestivalResponse,
-  GetFestivalsResponse,
-  PostFestivalsRequestBody,
+  GetEventResponse,
+  GetEventsResponse,
+  PostEventsRequestBody,
 } from '~/@types';
 import { prisma } from '~/helpers/prisma';
 
@@ -15,7 +15,7 @@ export const config = {
   },
 };
 
-// /api/festivals
+// /api/events
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -30,12 +30,12 @@ export default async function handle(
   }
 }
 
-// GET /api/festivals
+// GET /api/events
 async function handleGET(
   req: NextApiRequest,
-  res: NextApiResponse<GetFestivalsResponse | ErrorResponse>,
+  res: NextApiResponse<GetEventsResponse | ErrorResponse>,
 ) {
-  const result = await prisma.festival.findMany({
+  const result = await prisma.event.findMany({
     include: {
       dates: {
         orderBy: {
@@ -49,19 +49,19 @@ async function handleGET(
   res.json(sortBy(result, (v) => v.dates[0].startTime));
 }
 
-// POST /api/festivals
+// POST /api/events
 async function handlePOST(
   req: NextApiRequest,
-  res: NextApiResponse<GetFestivalResponse | ErrorResponse>,
+  res: NextApiResponse<GetEventResponse | ErrorResponse>,
 ) {
   const {
-    festivals,
+    events,
     dates,
     place: { id, ...place },
-  } = req.body as PostFestivalsRequestBody;
+  } = req.body as PostEventsRequestBody;
 
-  const data: Prisma.FestivalCreateInput = {
-    ...festivals,
+  const data: Prisma.EventCreateInput = {
+    ...events,
     dates: {
       create: dates,
     },
@@ -75,9 +75,9 @@ async function handlePOST(
     },
   };
 
-  const result = (await prisma.festival.create({
+  const result = (await prisma.event.create({
     data,
-  })) as GetFestivalResponse;
+  })) as GetEventResponse;
 
   res.json(result);
 }

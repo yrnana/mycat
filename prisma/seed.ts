@@ -1,4 +1,4 @@
-import { Festival, FestivalDate, Place, PrismaClient } from '@prisma/client';
+import { Event, EventDate, Place, PrismaClient } from '@prisma/client';
 
 const placeSeeds: Omit<Place, 'id'>[] = [
   {
@@ -15,7 +15,7 @@ const placeSeeds: Omit<Place, 'id'>[] = [
   },
 ];
 
-const festivalSeeds: Omit<Festival, 'id'>[] = [
+const eventSeeds: (Omit<Event, 'id' | 'placeId'> & { placeId: number })[] = [
   {
     placeId: 8106109,
     name: '2022 케이캣페어 서울',
@@ -39,9 +39,9 @@ async function seed() {
   const places = await Promise.all(
     placeSeeds.map((data) => db.place.create({ data })),
   );
-  const festivals = await Promise.all(
-    festivalSeeds.map((data) =>
-      db.festival.create({
+  const events = await Promise.all(
+    eventSeeds.map((data) =>
+      db.event.create({
         data: {
           ...data,
           placeId: places.find((place) => data.placeId === place.placeId).id,
@@ -49,24 +49,24 @@ async function seed() {
       }),
     ),
   );
-  const dateSeeds: FestivalDate[] = [];
-  festivals.forEach((festival) => {
-    if (festival.name === '2022 케이캣페어 서울') {
+  const dateSeeds: EventDate[] = [];
+  events.forEach((event) => {
+    if (event.name === '2022 케이캣페어 서울') {
       dateSeeds.push(
         {
-          festivalId: festival.id,
+          eventId: event.id,
           startTime: new Date('2022-01-21T10:00:00'),
           endTime: new Date('2022-01-21T18:00:00'),
           closingTime: new Date('2022-01-21T17:30:00'),
         },
         {
-          festivalId: festival.id,
+          eventId: event.id,
           startTime: new Date('2022-01-22T10:00:00'),
           endTime: new Date('2022-01-22T18:00:00'),
           closingTime: new Date('2022-01-22T17:30:00'),
         },
         {
-          festivalId: festival.id,
+          eventId: event.id,
           startTime: new Date('2022-01-23T10:00:00'),
           endTime: new Date('2022-01-23T18:00:00'),
           closingTime: new Date('2022-01-23T17:30:00'),
@@ -75,19 +75,19 @@ async function seed() {
     } else {
       dateSeeds.push(
         {
-          festivalId: festival.id,
+          eventId: event.id,
           startTime: new Date('2021-12-03T10:00:00'),
           endTime: new Date('2021-12-03T18:00:00'),
           closingTime: new Date('2021-12-03T17:30:00'),
         },
         {
-          festivalId: festival.id,
+          eventId: event.id,
           startTime: new Date('2021-12-04T10:00:00'),
           endTime: new Date('2021-12-04T18:00:00'),
           closingTime: new Date('2021-12-04T17:30:00'),
         },
         {
-          festivalId: festival.id,
+          eventId: event.id,
           startTime: new Date('2021-12-05T10:00:00'),
           endTime: new Date('2021-12-05T17:30:00'),
           closingTime: new Date('2021-12-05T17:00:00'),
@@ -95,7 +95,7 @@ async function seed() {
       );
     }
   });
-  await Promise.all(dateSeeds.map((data) => db.festivalDate.create({ data })));
+  await Promise.all(dateSeeds.map((data) => db.eventDate.create({ data })));
 }
 
 seed();

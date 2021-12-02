@@ -3,7 +3,7 @@ import Image from 'next/image';
 import ActiveLink, { linkClassName } from '~/components/layout/ActiveLink';
 
 const Layout: React.FC = ({ children }) => {
-  const { status } = useSession();
+  const { status, data } = useSession();
   const authenticated = status === 'authenticated';
 
   return (
@@ -14,6 +14,7 @@ const Layout: React.FC = ({ children }) => {
           <ActiveLink href="/shop" className="mr-auto">
             쇼핑몰
           </ActiveLink>
+          {data?.isAdmin && <ActiveLink href="/admin">관리자</ActiveLink>}
           {authenticated ? (
             <button
               className={linkClassName}

@@ -33,7 +33,7 @@ const ActiveLink = forwardRef<HTMLAnchorElement, ActiveLinkProps>(function Link(
         className,
         linkClassName,
         (router.asPath === href ||
-          (href === '/' && router.route === '/festivals/[id]')) &&
+          (href === '/' && router.route === '/events/[id]')) &&
           activeClassName,
       )}
       {...props}

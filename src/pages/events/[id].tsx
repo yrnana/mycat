@@ -4,18 +4,18 @@ import { format } from 'date-fns';
 import ko from 'date-fns/locale/ko';
 import type { GetServerSideProps } from 'next';
 import Image from 'next/image';
-import type { GetFestivalResponse } from '~/@types';
+import type { GetEventResponse } from '~/@types';
 
 type Props = {
-  festival: GetFestivalResponse;
+  event: GetEventResponse;
 };
 
 type Params = {
   id: string;
 };
 
-export default function FestivalDetail({ festival }: Props) {
-  const { image, dates, name, place, placeDetail, homepage } = festival;
+export default function EventDetail({ event }: Props) {
+  const { image, dates, name, place, placeDetail, homepage } = event;
 
   const date = useMemo(() => {
     const startDate = new Date(dates[0].startTime);
@@ -112,9 +112,9 @@ export default function FestivalDetail({ festival }: Props) {
 export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
   params,
 }) => {
-  const festivalId = params?.id;
+  const eventId = params?.id;
 
-  if (!festivalId) {
+  if (!eventId) {
     return {
       redirect: {
         destination: '/',
@@ -124,12 +124,12 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
   }
 
   try {
-    const { data: festival } = await axios.get<GetFestivalResponse>(
-      `http://localhost:3000/api/festivals/${festivalId}`,
+    const { data: event } = await axios.get<GetEventResponse>(
+      `http://localhost:3000/api/events/${eventId}`,
     );
     return {
       props: {
-        festival,
+        event,
       },
     };
   } catch (error) {

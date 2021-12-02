@@ -1,16 +1,16 @@
-import type { Festival, FestivalDate, Place, Prisma } from '@prisma/client';
+import type { Event, EventDate, Place, Prisma } from '@prisma/client';
 
-export type GetFestivalResponse = Festival & {
-  dates: FestivalDate[];
+export type GetEventResponse = Event & {
+  dates: EventDate[];
   place: Place;
 };
 
-export type GetFestivalsResponse = GetFestivalResponse[];
+export type GetEventsResponse = GetEventResponse[];
 
-export type PostFestivalsRequestBody = {
-  festivals: Omit<Prisma.FestivalCreateInput, 'dates' | 'place'>;
-  dates: Prisma.FestivalDateCreateWithoutFestivalInput[];
-  place: Omit<Prisma.PlaceUncheckedCreateInput, 'festival'>;
+export type PostEventsRequestBody = {
+  events: Omit<Prisma.EventCreateInput, 'dates' | 'place'>;
+  dates: Prisma.EventDateCreateWithoutEventInput[];
+  place: Omit<Prisma.PlaceUncheckedCreateInput, 'event'>;
 };
 
 export type ErrorResponse = {

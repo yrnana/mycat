@@ -54,31 +54,31 @@ model VerificationToken {
 }
 
 model Place {
-  id       Int        @id @default(autoincrement())
-  name     String
-  lat      Float
-  lng      Float
-  placeId  Int?
-  festival Festival[]
+  id      String  @id @default(cuid())
+  name    String
+  lat     Float
+  lng     Float
+  placeId Int?
+  event   Event[]
 }
 
-model FestivalDate {
+model EventDate {
   startTime   DateTime
   endTime     DateTime
   closingTime DateTime?
-  festivalId  Int
-  festival    Festival  @relation(fields: [festivalId], references: [id])
+  eventId     String
+  event       Event     @relation(fields: [eventId], references: [id])
 
-  @@id([festivalId, startTime, endTime])
+  @@id([eventId, startTime, endTime])
 }
 
-model Festival {
-  id          Int            @id @default(autoincrement())
+model Event {
+  id          String      @id @default(cuid())
   name        String
   homepage    String?
-  placeId     Int            @unique
-  place       Place          @relation(fields: [placeId], references: [id])
+  placeId     String      @unique
+  place       Place       @relation(fields: [placeId], references: [id])
   placeDetail String?
   image       String?
-  dates       FestivalDate[]
+  dates       EventDate[]
 }
