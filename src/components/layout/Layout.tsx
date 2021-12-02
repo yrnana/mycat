@@ -1,9 +1,6 @@
-import cx from 'classnames';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
-import Link from 'next/link';
-
-const linkClassName = 'block px-6 py-2 rounded';
+import ActiveLink, { linkClassName } from '~/components/layout/ActiveLink';
 
 const Layout: React.FC = ({ children }) => {
   const { status } = useSession();
@@ -13,12 +10,10 @@ const Layout: React.FC = ({ children }) => {
     <div className="container mx-auto px-4">
       <header className="py-10">
         <nav className="flex items-center text-lg font-medium">
-          <Link href="/">
-            <a className={cx(linkClassName, 'bg-sky-100')}>행사</a>
-          </Link>
-          <Link href="/shop">
-            <a className={cx(linkClassName, 'mr-auto')}>쇼핑몰</a>
-          </Link>
+          <ActiveLink href="/">행사</ActiveLink>
+          <ActiveLink href="/shop" className="mr-auto">
+            쇼핑몰
+          </ActiveLink>
           {authenticated ? (
             <button
               className={linkClassName}
