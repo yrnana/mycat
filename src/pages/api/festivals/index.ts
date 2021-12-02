@@ -1,13 +1,19 @@
 import type { Prisma } from '@prisma/client';
 import { sortBy } from 'lodash-es';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '~/helpers/prisma';
 import type {
   ErrorResponse,
   GetFestivalResponse,
   GetFestivalsResponse,
   PostFestivalsRequestBody,
-} from '~/types';
+} from '~/@types';
+import { prisma } from '~/helpers/prisma';
+
+export const config = {
+  api: {
+    externalResolver: true,
+  },
+};
 
 // /api/festivals
 export default async function handle(
@@ -19,7 +25,8 @@ export default async function handle(
   } else if (req.method === 'POST') {
     handlePOST(req, res);
   } else {
-    res.status(405).json({ error: true });
+    res.setHeader('Allow', ['GET', 'POST']);
+    res.status(405).end();
   }
 }
 

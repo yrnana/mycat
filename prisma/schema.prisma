@@ -7,6 +7,52 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  isAdmin       Boolean   @default(false)
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Account {
+  id                       String  @id @default(cuid())
+  type                     String
+  provider                 String
+  providerAccountId        String
+  userId                   String
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refresh_token            String?
+  refresh_token_expires_in Int?
+  access_token             String?
+  expires_in               Int?
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  expires      DateTime
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  id         String   @id @default(cuid())
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
 model Place {
   id       Int        @id @default(autoincrement())
   name     String
@@ -20,8 +66,8 @@ model FestivalDate {
   startTime   DateTime
   endTime     DateTime
   closingTime DateTime?
-  festival    Festival  @relation(fields: [festivalId], references: [id])
   festivalId  Int
+  festival    Festival  @relation(fields: [festivalId], references: [id])
 
   @@id([festivalId, startTime, endTime])
 }
@@ -29,10 +75,10 @@ model FestivalDate {
 model Festival {
   id          Int            @id @default(autoincrement())
   name        String
-  dates       FestivalDate[]
   homepage    String?
-  place       Place          @relation(fields: [placeId], references: [id])
   placeId     Int            @unique
+  place       Place          @relation(fields: [placeId], references: [id])
   placeDetail String?
   image       String?
+  dates       FestivalDate[]
 }

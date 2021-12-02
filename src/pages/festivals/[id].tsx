@@ -2,12 +2,11 @@ import { useMemo } from 'react';
 import axios from 'axios';
 import { format } from 'date-fns';
 import ko from 'date-fns/locale/ko';
-import type { GetServerSideProps, NextPage } from 'next';
+import type { GetServerSideProps } from 'next';
 import Image from 'next/image';
-import Layout from '~/components/layout/Layout';
-import type { GetFestivalResponse } from '~/types';
+import type { GetFestivalResponse } from '~/@types';
 
-type Data = {
+type Props = {
   festival: GetFestivalResponse;
 };
 
@@ -15,7 +14,7 @@ type Params = {
   id: string;
 };
 
-const FestivalDetail: NextPage<Data> = ({ festival }) => {
+export default function FestivalDetail({ festival }: Props) {
   const { image, dates, name, place, placeDetail, homepage } = festival;
 
   const date = useMemo(() => {
@@ -69,55 +68,48 @@ const FestivalDetail: NextPage<Data> = ({ festival }) => {
   }, [dates]);
 
   return (
-    <Layout>
-      <div className="flex flex-col lg:flex-row lg:space-x-10">
-        <div className="relative transition-height duration-300 unset-img lg:w-2/5 lg:flex-shrink-0">
-          <Image
-            src={image || ''}
-            alt=""
-            layout="fill"
-            objectFit="contain"
-            quality={50}
-            priority
-          />
-        </div>
-        <div className="mt-6 lg:mt-0 lg:flex-grow">
-          <h2 className="font-bold text-2xl sm:text-3xl mb-6">{name}</h2>
-          <div className="grid grid-cols-table gap-x-4 gap-y-2 text-lg">
-            {homepage && (
-              <>
-                <div className="font-bold">홈페이지</div>
-                <div>
-                  <a
-                    href={homepage}
-                    className="text-sky-400 hover:text-sky-500"
-                  >
-                    {homepage}
-                  </a>
-                </div>
-              </>
-            )}
-            <div className="font-bold">장소</div>
-            <div>
-              {place.name}
-              {placeDetail ? ` ${placeDetail}` : ''}
-            </div>
-            <div className="font-bold">기간</div>
-            <div>{date}</div>
-            <div className="font-bold">시간</div>
-            <div className="whitespace-pre-line">
-              {typeof times === 'string' ? times : times.join(`\n`)}
-            </div>
+    <div className="flex flex-col lg:flex-row lg:space-x-10">
+      <div className="relative transition-height duration-300 unset-img lg:w-2/5 lg:flex-shrink-0">
+        <Image
+          src={image || ''}
+          alt=""
+          layout="fill"
+          objectFit="contain"
+          quality={50}
+          priority
+        />
+      </div>
+      <div className="mt-6 lg:mt-0 lg:flex-grow">
+        <h2 className="font-bold text-2xl sm:text-3xl mb-6">{name}</h2>
+        <div className="grid grid-cols-table gap-x-4 gap-y-2 text-lg">
+          {homepage && (
+            <>
+              <div className="font-bold">홈페이지</div>
+              <div>
+                <a href={homepage} className="text-sky-400 hover:text-sky-500">
+                  {homepage}
+                </a>
+              </div>
+            </>
+          )}
+          <div className="font-bold">장소</div>
+          <div>
+            {place.name}
+            {placeDetail ? ` ${placeDetail}` : ''}
+          </div>
+          <div className="font-bold">기간</div>
+          <div>{date}</div>
+          <div className="font-bold">시간</div>
+          <div className="whitespace-pre-line">
+            {typeof times === 'string' ? times : times.join(`\n`)}
           </div>
         </div>
       </div>
-    </Layout>
+    </div>
   );
-};
+}
 
-export default FestivalDetail;
-
-export const getServerSideProps: GetServerSideProps<Data, Params> = async ({
+export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
   params,
 }) => {
   const festivalId = params?.id;

@@ -1,6 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { ErrorResponse, GetFestivalResponse } from '~/@types';
 import { prisma } from '~/helpers/prisma';
-import type { ErrorResponse, GetFestivalResponse } from '~/types';
+
+export const config = {
+  api: {
+    externalResolver: true,
+  },
+};
 
 // /api/festivals/:id
 export default async function handle(
@@ -10,7 +16,8 @@ export default async function handle(
   if (req.method === 'GET') {
     handleGET(req, res);
   } else {
-    res.status(405).json({ error: true });
+    res.setHeader('Allow', ['GET']);
+    res.status(405).end();
   }
 }
 

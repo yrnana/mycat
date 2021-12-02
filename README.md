@@ -21,6 +21,11 @@ import Image from 'next/image';
 <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />;
 ```
 
+```sh
+# create secret
+openssl rand -base64 32
+```
+
 ### prisma
 
 - https://remix.run/docs/en/v1/tutorials/jokes#set-up-prisma
