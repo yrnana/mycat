@@ -1,13 +1,18 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import NextAuth from 'next-auth';
 import KakaoProvider from 'next-auth/providers/kakao';
+import {
+  KAKAO_CLIENT_ID,
+  KAKAO_CLIENT_SECRET,
+  SECRET,
+} from '~/helpers/constants';
 import { prisma } from '~/helpers/prisma';
 
 export default NextAuth({
   providers: [
     KakaoProvider({
-      clientId: process.env.KAKAO_CLIENT_ID,
-      clientSecret: process.env.KAKAO_CLIENT_SECRET,
+      clientId: KAKAO_CLIENT_ID,
+      clientSecret: KAKAO_CLIENT_SECRET,
       authorization: {
         url: 'https://kauth.kakao.com/oauth/authorize',
         params: {
@@ -35,14 +40,14 @@ export default NextAuth({
     }),
   ],
   adapter: PrismaAdapter(prisma),
-  secret: process.env.SECRET,
+  secret: SECRET,
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 24 * 60 * 60, // 24 hours
   },
   jwt: {
-    secret: process.env.SECRET,
+    secret: SECRET,
   },
   pages: {
     signIn: '/auth/signin',

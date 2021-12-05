@@ -6,6 +6,10 @@ import type {
   PostEventsRequestBody,
   PostUploadsResponse,
 } from '~/@types';
+import {
+  NEXT_PUBLIC_KAKAO_CLIENT_ID,
+  NEXT_PUBLIC_VERCEL_URL,
+} from '~/helpers/constants';
 import { toCamelCase } from '~/helpers/utils';
 
 export const instance = axios.create();
@@ -28,7 +32,7 @@ export async function getPlaceByKeyword(keyword: string) {
         query: keyword,
       },
       headers: {
-        Authorization: 'KakaoAK ae5a5c92402a7b1d64ac28ecd77b5f34',
+        Authorization: `KakaoAK ${NEXT_PUBLIC_KAKAO_CLIENT_ID}`,
       },
     },
   );
@@ -37,14 +41,14 @@ export async function getPlaceByKeyword(keyword: string) {
 
 export async function getEvents() {
   const { data } = await axios.get<GetEventsResponse>(
-    `http://localhost:3000/api/events`,
+    `${NEXT_PUBLIC_VERCEL_URL}/api/events`,
   );
   return data;
 }
 
 export async function getEvent(eventId: string) {
   const { data } = await axios.get<GetEventResponse>(
-    `http://localhost:3000/api/events/${eventId}`,
+    `${NEXT_PUBLIC_VERCEL_URL}/api/events/${eventId}`,
   );
   return data;
 }

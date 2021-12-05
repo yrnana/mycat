@@ -1,11 +1,10 @@
 import { PrismaClient } from '@prisma/client';
+import { isDev } from '~/helpers/constants';
 
 declare global {
   // eslint-disable-next-line no-var
   var prisma: PrismaClient | undefined;
 }
-
-const isDev = process.env.NODE_ENV !== 'production';
 
 export const prisma =
   global.prisma ||
