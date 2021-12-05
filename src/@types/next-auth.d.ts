@@ -1,19 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import type { Role } from '@prisma/client';
 import { Session } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 
 declare module 'next-auth' {
   interface Session {
-    isAdmin: boolean;
+    role: Role;
   }
 
   interface User {
-    isAdmin: boolean;
+    role: Role;
   }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
-    isAdmin: boolean;
+    role: Role;
   }
 }

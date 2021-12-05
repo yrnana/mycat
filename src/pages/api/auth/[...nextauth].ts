@@ -56,12 +56,12 @@ export default NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.isAdmin = !!user.isAdmin;
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
-      session.isAdmin = token.isAdmin;
+      session.role = token.role;
       return session;
     },
   },

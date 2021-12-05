@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 import { TabList, Tabs } from '@reach/tabs';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
@@ -36,7 +37,7 @@ export default function EventsAdmin() {
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const session = await getSession({ req });
 
-  if (!session?.isAdmin) {
+  if (session?.role !== Role.ADMIN) {
     return {
       redirect: {
         destination: '/',

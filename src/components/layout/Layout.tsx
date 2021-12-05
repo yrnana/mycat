@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { Toaster } from 'react-hot-toast';
@@ -15,7 +16,7 @@ const Layout: React.FC = ({ children }) => {
           <ActiveLink href="/shops" className="mr-auto">
             쇼핑몰
           </ActiveLink>
-          {data?.isAdmin && (
+          {data?.role === Role.ADMIN && (
             <ActiveLink href="/admin/events">관리자</ActiveLink>
           )}
           {authenticated ? (
