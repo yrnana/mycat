@@ -1,21 +1,27 @@
 import { useMemo } from 'react';
-import axios from 'axios';
 import { format } from 'date-fns';
 import ko from 'date-fns/locale/ko';
 import type { GetServerSideProps } from 'next';
 import Image from 'next/image';
-import type { GetEventResponse } from '~/@types';
+import { useRouter } from 'next/router';
+import { dehydrate, QueryClient, useQuery } from 'react-query';
+import type { DehydratedState } from 'react-query';
+import { getEvent } from '~/helpers/api';
 
 type Props = {
-  event: GetEventResponse;
+  dehydratedState: DehydratedState;
 };
 
 type Params = {
   id: string;
 };
 
-export default function EventDetail({ event }: Props) {
-  const { image, dates, name, place, placeDetail, homepage } = event;
+export default function EventDetail() {
+  const router = useRouter();
+  const eventId = router.query.id as Params['id'];
+
+  const { data } = useQuery(['event', eventId], () => getEvent(eventId));
+  const { image, dates, name, place, placeDetail, homepage } = data!;
 
   const date = useMemo(() => {
     const startDate = new Date(dates[0].startTime);
@@ -124,12 +130,15 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
   }
 
   try {
-    const { data: event } = await axios.get<GetEventResponse>(
-      `http://localhost:3000/api/events/${eventId}`,
+    const queryClient = new QueryClient();
+
+    await queryClient.prefetchQuery(['event', eventId], () =>
+      getEvent(eventId),
     );
+
     return {
       props: {
-        event,
+        dehydratedState: dehydrate(queryClient),
       },
     };
   } catch (error) {

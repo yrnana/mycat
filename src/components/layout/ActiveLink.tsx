@@ -30,8 +30,8 @@ const ActiveLink = forwardRef<HTMLAnchorElement, ActiveLinkProps>(function Link(
       onClick={handleClick}
       ref={ref}
       className={cx(
-        className,
         linkClassName,
+        className,
         (router.asPath === href ||
           (href === '/' && router.route === '/events/[id]')) &&
           activeClassName,

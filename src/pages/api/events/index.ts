@@ -1,6 +1,7 @@
 import type { Prisma } from '@prisma/client';
 import { sortBy } from 'lodash-es';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import nc from 'next-connect';
 import type {
   ErrorResponse,
   GetEventResponse,
@@ -9,75 +10,62 @@ import type {
 } from '~/@types';
 import { prisma } from '~/helpers/prisma';
 
-export const config = {
-  api: {
-    externalResolver: true,
+const handler = nc<NextApiRequest, NextApiResponse>({
+  onError(error, req, res) {
+    console.error(error);
+    res
+      .status(501)
+      .json({ error: `Sorry something Happened! ${error.message}` });
   },
-};
-
-// /api/events
-export default async function handle(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  if (req.method === 'GET') {
-    handleGET(req, res);
-  } else if (req.method === 'POST') {
-    handlePOST(req, res);
-  } else {
-    res.setHeader('Allow', ['GET', 'POST']);
-    res.status(405).end();
-  }
-}
+  onNoMatch(req, res) {
+    res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
+  },
+});
 
 // GET /api/events
-async function handleGET(
-  req: NextApiRequest,
-  res: NextApiResponse<GetEventsResponse | ErrorResponse>,
-) {
-  const result = await prisma.event.findMany({
-    include: {
-      dates: {
-        orderBy: {
-          startTime: 'asc',
+handler.get(
+  async (req, res: NextApiResponse<GetEventsResponse | ErrorResponse>) => {
+    const result = await prisma.event.findMany({
+      include: {
+        dates: {
+          orderBy: {
+            startTime: 'asc',
+          },
         },
+        place: true,
       },
-      place: true,
-    },
-  });
+    });
 
-  res.json(sortBy(result, (v) => v.dates[0].startTime));
-}
+    res.json(sortBy(result, (v) => v.dates[0].startTime));
+  },
+);
 
 // POST /api/events
-async function handlePOST(
-  req: NextApiRequest,
-  res: NextApiResponse<GetEventResponse | ErrorResponse>,
-) {
-  const {
-    events,
-    dates,
-    place: { id, ...place },
-  } = req.body as PostEventsRequestBody;
+handler.post(
+  async (req, res: NextApiResponse<GetEventResponse | ErrorResponse>) => {
+    const { event, dates, place } = req.body as PostEventsRequestBody;
 
-  const data: Prisma.EventCreateInput = {
-    ...events,
-    dates: {
-      create: dates,
-    },
-    place: {
-      connectOrCreate: {
-        where: {
-          id,
-        },
-        create: place,
+    const data: Prisma.EventCreateInput = {
+      ...event,
+      dates: {
+        create: dates,
       },
-    },
-  };
+      place: {
+        connectOrCreate: {
+          where: {
+            id: place.id,
+          },
+          create: place,
+        },
+      },
+    };
 
-  const result = (await prisma.event.create({
-    data,
-  })) as GetEventResponse;
+    const result = (await prisma.event.create({
+      data,
+    })) as GetEventResponse;
 
-  res.json(result);
-}
+    res.json(result);
+  },
+);
+
+export default handler;

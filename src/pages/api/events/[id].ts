@@ -1,49 +1,88 @@
+import { Prisma } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { ErrorResponse, GetEventResponse } from '~/@types';
+import nc from 'next-connect';
+import type {
+  ErrorResponse,
+  GetEventResponse,
+  PostEventsRequestBody,
+} from '~/@types';
 import { prisma } from '~/helpers/prisma';
 
-export const config = {
-  api: {
-    externalResolver: true,
+const handler = nc<NextApiRequest, NextApiResponse>({
+  onError(error, req, res) {
+    console.error(error);
+    res
+      .status(501)
+      .json({ error: `Sorry something Happened! ${error.message}` });
   },
-};
-
-// /api/events/:id
-export default async function handle(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  if (req.method === 'GET') {
-    handleGET(req, res);
-  } else {
-    res.setHeader('Allow', ['GET']);
-    res.status(405).end();
-  }
-}
+  onNoMatch(req, res) {
+    res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
+  },
+});
 
 // GET /api/events/:id
-async function handleGET(
-  req: NextApiRequest,
-  res: NextApiResponse<GetEventResponse | ErrorResponse>,
-) {
-  const eventId = req.query.id;
-  const result = await prisma.event.findUnique({
-    where: {
-      id: String(eventId),
-    },
-    include: {
+handler.get(
+  async (req, res: NextApiResponse<GetEventResponse | ErrorResponse>) => {
+    const eventId = String(req.query.id);
+    const result = await prisma.event.findUnique({
+      where: {
+        id: eventId,
+      },
+      include: {
+        dates: {
+          orderBy: {
+            startTime: 'asc',
+          },
+        },
+        place: true,
+      },
+    });
+
+    if (result) {
+      res.json(result);
+    } else {
+      res.status(404).json({ error: true });
+    }
+  },
+);
+
+// PUT /api/events/:id
+handler.put(
+  async (req, res: NextApiResponse<GetEventResponse | ErrorResponse>) => {
+    const eventId = String(req.query.id);
+    const { event, dates, place } = req.body as PostEventsRequestBody;
+
+    const data: Prisma.EventUpdateInput = {
+      ...event,
       dates: {
-        orderBy: {
-          startTime: 'asc',
+        deleteMany: {
+          eventId,
+        },
+        create: dates,
+      },
+      place: {
+        connectOrCreate: {
+          where: {
+            id: place.id,
+          },
+          create: place,
         },
       },
-      place: true,
-    },
-  });
+    };
 
-  if (result) {
-    res.json(result);
-  } else {
-    res.status(404).json({ error: true });
-  }
-}
+    const result = (await prisma.event.update({
+      where: {
+        id: eventId,
+      },
+      data,
+    })) as GetEventResponse;
+
+    if (result) {
+      res.json(result);
+    } else {
+      res.status(404).json({ error: true });
+    }
+  },
+);
+
+export default handler;
