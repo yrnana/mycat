@@ -20,15 +20,14 @@ const eventSeeds: Omit<Event, 'id'>[] = [
     name: '2022 케이캣페어 서울',
     placeId: 8106109,
     placeDetail: null,
-    image:
-      'https://s3-ap-northeast-2.amazonaws.com/esang-kcat/wp-content/uploads/2021/11/23014247/22_1%EC%9B%94%EC%BD%94%EC%97%91%EC%8A%A4%EC%BA%A3_01.png',
+    image: '/uploads/k_cat_fair_2022_1.png',
     homepage: 'https://k-cat.co.kr/2022cat_coex/',
   },
   {
     name: '제19회 궁디팡팡 캣페스타',
     placeId: 8360965,
     placeDetail: null,
-    image: 'https://www.gdppcat.com/images/last/19_poster.jpg',
+    image: '/uploads/cat_festa_2021_12.jpeg',
     homepage: 'https://www.gdppcat.com/',
   },
 ];

@@ -63,6 +63,10 @@ export async function putEvent(event: PostEventsRequestBody) {
   return data;
 }
 
+export async function deleteEvent(eventId: string) {
+  await axios.delete(`/api/events/${eventId}`);
+}
+
 export async function postUpload({
   name,
   files,

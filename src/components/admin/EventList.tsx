@@ -1,12 +1,11 @@
 import cx from 'classnames';
-import { useQuery } from 'react-query';
 import { useRecoilState } from 'recoil';
-import { getEvents } from '~/helpers/api';
 import { eventIdState } from '~/helpers/store';
+import useEventsQuery from '~/queries/useEventsQuery';
 
 export default function EventList() {
   const [eventId, setEventId] = useRecoilState(eventIdState);
-  const { data: events } = useQuery('events', getEvents);
+  const { data: events } = useEventsQuery();
 
   return (
     <ul className="mb-8 list-outside list-disc ml-4">

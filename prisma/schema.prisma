@@ -44,15 +44,6 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model VerificationToken {
-  id         String   @id @default(cuid())
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-}
-
 model Place {
   id    Int     @id
   name  String
@@ -66,7 +57,7 @@ model EventDate {
   endTime     DateTime
   closingTime DateTime?
   eventId     String
-  event       Event     @relation(fields: [eventId], references: [id])
+  event       Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   @@id([eventId, startTime, endTime])
 }

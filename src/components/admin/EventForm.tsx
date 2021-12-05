@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { PlusIcon, SearchIcon, XIcon } from '@heroicons/react/solid';
 import { zodResolver } from '@hookform/resolvers/zod/dist/zod';
 import { formatISO, set } from 'date-fns';
@@ -12,6 +12,7 @@ import type { KakaoPlaceDocument, PostEventsRequestBody } from '~/@types';
 import Button from '~/components/common/Button';
 import Input, { FormControl, Label } from '~/components/common/Input';
 import {
+  deleteEvent,
   getEvent,
   getPlaceByKeyword,
   postEvent,
@@ -74,6 +75,11 @@ export default function EventForm({ edit }: EventFormProps) {
       shouldUseNativeValidation: true,
     });
 
+  const { fields, append, remove } = useFieldArray({
+    name: 'dates',
+    control,
+  });
+
   const [eventId, setEventId] = useRecoilState(eventIdState);
   useQuery(
     ['event', eventId],
@@ -101,26 +107,40 @@ export default function EventForm({ edit }: EventFormProps) {
     },
   );
 
+  const onReset = useCallback(() => {
+    remove();
+    reset();
+  }, [remove, reset]);
+
   useEffect(() => {
     return () => {
-      reset();
+      onReset();
       setEventId(undefined);
     };
-  }, [reset, setEventId]);
+  }, [onReset, setEventId]);
 
   const { mutateAsync: uploadFiles } = useMutation(postUpload);
 
   const { mutateAsync: addEvent } = useMutation(postEvent, {
     onSuccess: () => {
-      toast('Here is your toast.');
-      reset();
+      queryClient.invalidateQueries('events');
+      toast.success('등록 성공');
+      onReset();
     },
   });
 
   const { mutateAsync: editEvent } = useMutation(putEvent, {
     onSuccess: () => {
       queryClient.invalidateQueries('events');
-      toast.success('Here is your toast.');
+      toast.success('수정 성공');
+    },
+  });
+
+  const { mutateAsync: removeEvent } = useMutation(deleteEvent, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('events');
+      toast.success('삭제 성공');
+      setEventId(undefined);
     },
   });
 
@@ -165,16 +185,11 @@ export default function EventForm({ edit }: EventFormProps) {
     }
   };
 
-  const { fields, append, remove } = useFieldArray({
-    name: 'dates',
-    control,
-  });
-
   const [placeDocs, setPlaceDocs] = useState<
     KakaoPlaceDocument[] | undefined
   >();
 
-  if (edit && eventId === undefined) {
+  if (edit && !eventId) {
     return null;
   }
 
@@ -226,6 +241,7 @@ export default function EventForm({ edit }: EventFormProps) {
                   const placeName = getValues('place.name');
                   if (!placeName) {
                     // TODO: setError
+                    toast.error('장소를 입력하세요');
                     return;
                   }
                   const { documents } = await getPlaceByKeyword(placeName);
@@ -381,9 +397,14 @@ export default function EventForm({ edit }: EventFormProps) {
           </FormControl>
           <div className="flex space-x-4">
             <Button type="submit">{edit ? '수정' : '등록'}</Button>
-            <Button type="button" color="secondary" onClick={() => reset()}>
+            <Button type="button" color="secondary" onClick={onReset}>
               초기화
             </Button>
+            {edit && eventId && (
+              <Button type="button" onClick={() => removeEvent(eventId)}>
+                삭제
+              </Button>
+            )}
           </div>
         </form>
       </div>

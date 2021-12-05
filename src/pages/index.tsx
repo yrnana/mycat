@@ -4,17 +4,18 @@ import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import { dehydrate, QueryClient, useQuery } from 'react-query';
+import { dehydrate, QueryClient } from 'react-query';
 import type { DehydratedState } from 'react-query';
 import type { GetEventResponse } from '~/@types';
 import { getEvents } from '~/helpers/api';
+import useEventsQuery from '~/queries/useEventsQuery';
 
 type Props = {
   dehydratedState: DehydratedState;
 };
 
 export default function Home() {
-  const { data: events } = useQuery('events', getEvents);
+  const { data: events } = useEventsQuery();
 
   return (
     <>
@@ -47,7 +48,7 @@ const EventItem = ({ id, image, name, place, dates }: GetEventResponse) => {
             <div>
               <div className="relative transition-height duration-300 h-52 xs:h-60 sm:h-96">
                 <Image
-                  src={image || ''}
+                  src={image || '/static/images/placeholder.jpg'}
                   alt=""
                   layout="fill"
                   objectFit="cover"

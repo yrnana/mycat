@@ -85,4 +85,14 @@ handler.put(
   },
 );
 
+handler.delete(async (req, res) => {
+  const eventId = String(req.query.id);
+
+  const result = await prisma.event.delete({
+    where: { id: eventId },
+  });
+
+  res.json(result);
+});
+
 export default handler;
