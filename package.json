@@ -15,7 +15,8 @@
     "lint": "next lint",
     "studio": "prisma studio",
     "type-check": "tsc -p tsconfig.json",
-    "format": "prettier --write \"./src/**/*.{js,ts,tsx,scss,json,html}\""
+    "format": "prettier --write \"./src/**/*.{js,ts,tsx,scss,json,html}\"",
+    "vercel-build": "prisma generate && prisma migrate deploy && npm run build"
   },
   "dependencies": {
     "@heroicons/react": "^1.0.5",
