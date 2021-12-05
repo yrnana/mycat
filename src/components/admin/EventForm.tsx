@@ -81,7 +81,7 @@ export default function EventForm({ edit }: EventFormProps) {
   });
 
   const [eventId, setEventId] = useRecoilState(eventIdState);
-  useQuery(
+  const { data } = useQuery(
     ['event', eventId],
     ({ queryKey: [, eventId] }) => getEvent(eventId || ''),
     {
@@ -152,6 +152,9 @@ export default function EventForm({ edit }: EventFormProps) {
     images,
   }: FormValues) => {
     let image: string | null = null;
+    if (edit && data?.image) {
+      image = data?.image;
+    }
     if (images && images.length > 0) {
       const { files } = await uploadFiles({
         name: 'files',
