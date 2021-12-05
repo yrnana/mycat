@@ -4,4 +4,7 @@ module.exports = {
   images: {
     domains: ['www.gdppcat.com', 's3-ap-northeast-2.amazonaws.com'],
   },
+  experimental: {
+    styledComponents: true,
+  },
 };

@@ -25,6 +25,10 @@ module.exports = {
       gridTemplateColumns: {
         table: 'minmax(80px, max-content) auto',
       },
+      minWidth: {
+        28: '7rem',
+        32: '8rem',
+      },
     },
   },
   variants: {
