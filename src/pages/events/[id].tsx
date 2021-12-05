@@ -77,7 +77,7 @@ export default function EventDetail() {
     <div className="flex flex-col lg:flex-row lg:space-x-10">
       <div className="relative transition-height duration-300 unset-img lg:w-2/5 lg:flex-shrink-0">
         <Image
-          src={image || ''}
+          src={image || '/static/images/placeholder.jpg'}
           alt=""
           layout="fill"
           objectFit="contain"
