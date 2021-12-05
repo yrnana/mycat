@@ -54,12 +54,11 @@ model VerificationToken {
 }
 
 model Place {
-  id      String  @id @default(cuid())
-  name    String
-  lat     Float
-  lng     Float
-  placeId Int?
-  event   Event[]
+  id    Int     @id
+  name  String
+  lat   Float
+  lng   Float
+  event Event[]
 }
 
 model EventDate {
@@ -76,7 +75,7 @@ model Event {
   id          String      @id @default(cuid())
   name        String
   homepage    String?
-  placeId     String      @unique
+  placeId     Int
   place       Place       @relation(fields: [placeId], references: [id])
   placeDetail String?
   image       String?
