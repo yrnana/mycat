@@ -7,7 +7,7 @@
   - [x] edit
   - [x] delete
 - [ ] map
-- [ ] share
+- [x] share
 - [ ] shop
 - [x] auth - kakao
 

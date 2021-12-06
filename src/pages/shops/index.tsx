@@ -1,4 +1,4 @@
-import Head from 'next/head';
+import Seo from '~/components/common/Seo';
 
 type Props = {
   foo: string;
@@ -7,10 +7,7 @@ type Props = {
 export default function Shop(props: Props) {
   return (
     <>
-      <Head>
-        <title>고양이 쇼핑몰 : My Cat</title>
-        <meta name="description" content="고양이 쇼핑몰 목록" />
-      </Head>
+      <Seo title="고양이 쇼핑몰 : My Cat" description="고양이 쇼핑몰 목록" />
       Hello Shop
     </>
   );

@@ -2,12 +2,12 @@ import { useMemo } from 'react';
 import { format } from 'date-fns';
 import ko from 'date-fns/locale/ko';
 import type { GetServerSideProps } from 'next';
-import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 import type { DehydratedState } from 'react-query';
+import Seo from '~/components/common/Seo';
 import { getEvent } from '~/helpers/api';
 import {
   NEXT_PUBLIC_KAKAO_JS_APP_KEY,
@@ -88,12 +88,14 @@ export default function EventDetail() {
   const imageSrc = image || '/static/images/placeholder.jpg';
 
   const share = () => {
-    const shareUrl = `${NEXT_PUBLIC_VERCEL_URL}/${asPath}`;
+    const shareUrl = `${NEXT_PUBLIC_VERCEL_URL}${asPath}`;
+    const imageUrl = `${NEXT_PUBLIC_VERCEL_URL}${imageSrc}`;
     Kakao?.Link?.sendDefault({
       objectType: 'feed',
       content: {
         title: name,
-        imageUrl: `${NEXT_PUBLIC_VERCEL_URL}${imageSrc}`,
+        description: date,
+        imageUrl,
         link: {
           webUrl: shareUrl,
           mobileWebUrl: shareUrl,
@@ -113,10 +115,7 @@ export default function EventDetail() {
 
   return (
     <>
-      <Head>
-        <title>{name} : My Cat</title>
-        <meta name="description" content={name} />
-      </Head>
+      <Seo title={`${name} : My Cat`} description={name} image={imageSrc} />
       <Script
         src="https://developers.kakao.com/sdk/js/kakao.min.js"
         onLoad={initKakao}

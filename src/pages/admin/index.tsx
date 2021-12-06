@@ -4,10 +4,10 @@ import { Role } from '@prisma/client';
 import cx from 'classnames';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
-import Head from 'next/head';
 import { dehydrate, QueryClient } from 'react-query';
 import EventForm from '~/components/admin/EventForm';
 import EventList from '~/components/admin/EventList';
+import Seo from '~/components/common/Seo';
 import { getEvents } from '~/helpers/api';
 
 const tabs = ['행사 등록', '행사 수정'];
@@ -15,9 +15,7 @@ const tabs = ['행사 등록', '행사 수정'];
 export default function Admin() {
   return (
     <>
-      <Head>
-        <meta name="description" content="My Cat 관리자 페이지" />
-      </Head>
+      <Seo description="My Cat 관리자 페이지" />
       <Tab.Group>
         <Tab.List className="inline-flex p-1 space-x-1 bg-gray-300 rounded-xl mb-8">
           {tabs.map((tab) => (

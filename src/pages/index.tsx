@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 import { format } from 'date-fns';
 import type { GetServerSideProps } from 'next';
-import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { dehydrate, QueryClient } from 'react-query';
 import type { DehydratedState } from 'react-query';
 import type { GetEventResponse } from '~/@types';
+import Seo from '~/components/common/Seo';
 import { getEvents } from '~/helpers/api';
 import useEventsQuery from '~/queries/useEventsQuery';
 
@@ -19,10 +19,7 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>고양이 행사 : My Cat</title>
-        <meta name="description" content="고양이 행사 목록" />
-      </Head>
+      <Seo title="고양이 행사 : My Cat" description="고양이 행사 목록" />
       <ul className="my-4 mx-2 xs:mx-1 sm:mx-0 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-10 sm:gap-20 2xl:gap-24 transition-gap">
         {events?.map((event) => (
           <EventItem key={event.id} {...event} />
