@@ -90,7 +90,7 @@ export default function EventForm({ edit }: EventFormProps) {
       staleTime: 1000 * 60 * 3,
       onSuccess: ({ name, homepage, place, placeDetail, dates }) => {
         setValue('name', name);
-        homepage && setValue('homepage', homepage);
+        setValue('homepage', homepage);
         setValue('place.name', place.name);
         setValue('place.lat', place.lat);
         setValue('place.lng', place.lng);
