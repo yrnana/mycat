@@ -27,7 +27,9 @@ export default function EventDetail() {
   const { asPath, query } = useRouter();
   const eventId = query.id as Params['id'];
 
-  const { data } = useQuery(['event', eventId], () => getEvent(eventId));
+  const { data } = useQuery(['event', eventId], () => getEvent(eventId), {
+    staleTime: 1000 * 60 * 3,
+  });
   const { image, dates, name, place, placeDetail, homepage } = data!;
 
   const date = useMemo(() => {
@@ -199,8 +201,12 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({
   try {
     const queryClient = new QueryClient();
 
-    await queryClient.prefetchQuery(['event', eventId], () =>
-      getEvent(eventId),
+    await queryClient.prefetchQuery(
+      ['event', eventId],
+      () => getEvent(eventId),
+      {
+        staleTime: 1000 * 60 * 5,
+      },
     );
 
     return {

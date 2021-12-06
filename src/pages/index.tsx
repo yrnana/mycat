@@ -76,7 +76,9 @@ const EventItem = ({ id, image, name, place, dates }: GetEventResponse) => {
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery('events', getEvents);
+  await queryClient.prefetchQuery('events', getEvents, {
+    staleTime: 1000 * 60 * 5,
+  });
   return {
     props: {
       dehydratedState: dehydrate(queryClient),

@@ -87,6 +87,7 @@ export default function EventForm({ edit }: EventFormProps) {
     {
       enabled: !!eventId,
       keepPreviousData: true,
+      staleTime: 1000 * 60 * 3,
       onSuccess: ({ name, homepage, place, placeDetail, dates }) => {
         setValue('name', name);
         homepage && setValue('homepage', homepage);

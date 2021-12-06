@@ -7,7 +7,7 @@ export default function useEventsQuery(
 ) {
   return useQuery<GetEventsResponse>('events', getEvents, {
     ...options,
-    staleTime: Infinity,
+    staleTime: 1000 * 60 * 3,
     cacheTime: Infinity,
   });
 }
