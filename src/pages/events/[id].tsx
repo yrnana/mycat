@@ -88,21 +88,23 @@ export default function EventDetail() {
   const imageSrc = image || '/static/images/placeholder.jpg';
 
   const share = () => {
-    const webUrl = `${NEXT_PUBLIC_VERCEL_URL}/${asPath}`;
+    const shareUrl = `${NEXT_PUBLIC_VERCEL_URL}/${asPath}`;
     Kakao?.Link?.sendDefault({
       objectType: 'feed',
       content: {
         title: name,
         imageUrl: `${NEXT_PUBLIC_VERCEL_URL}${imageSrc}`,
         link: {
-          webUrl,
+          webUrl: shareUrl,
+          mobileWebUrl: shareUrl,
         },
       },
       buttons: [
         {
           title: '자세히 보기',
           link: {
-            webUrl,
+            webUrl: shareUrl,
+            mobileWebUrl: shareUrl,
           },
         },
       ],
