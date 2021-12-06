@@ -13,6 +13,7 @@ import {
   NEXT_PUBLIC_KAKAO_JS_APP_KEY,
   NEXT_PUBLIC_VERCEL_URL,
 } from '~/helpers/constants';
+import placeholderImg from '~/public/static/images/placeholder.jpg';
 
 type Props = {
   dehydratedState: DehydratedState;
@@ -123,7 +124,7 @@ export default function EventDetail() {
       <div className="flex flex-col lg:flex-row lg:space-x-10">
         <div className="relative transition-height duration-300 unset-img lg:w-2/5 lg:flex-shrink-0">
           <Image
-            src={imageSrc}
+            src={image || placeholderImg}
             alt=""
             layout="fill"
             objectFit="contain"

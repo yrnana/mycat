@@ -8,6 +8,7 @@ import type { DehydratedState } from 'react-query';
 import type { GetEventResponse } from '~/@types';
 import Seo from '~/components/common/Seo';
 import { getEvents } from '~/helpers/api';
+import placeholderImg from '~/public/static/images/placeholder.jpg';
 import useEventsQuery from '~/queries/useEventsQuery';
 
 type Props = {
@@ -46,7 +47,7 @@ const EventItem = ({ id, image, name, place, dates }: GetEventResponse) => {
             <div>
               <div className="relative transition-height duration-300 h-52 xs:h-60 sm:h-96">
                 <Image
-                  src={image || '/static/images/placeholder.jpg'}
+                  src={image || placeholderImg}
                   alt=""
                   layout="fill"
                   objectFit="cover"

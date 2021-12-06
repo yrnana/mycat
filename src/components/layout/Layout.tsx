@@ -6,6 +6,7 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { Toaster } from 'react-hot-toast';
 import ActiveLink from '~/components/layout/ActiveLink';
+import kakaoLoginImg from '~/public/static/images/kakao_login_medium.png';
 
 const iconClassName = [
   'inline-flex items-center justify-center',
@@ -15,6 +16,11 @@ const iconClassName = [
 
 const Layout: React.FC = ({ children }) => {
   const { status, data } = useSession();
+
+  if (status === 'loading') {
+    return null;
+  }
+
   const authenticated = status === 'authenticated';
 
   return (
@@ -65,8 +71,8 @@ const Layout: React.FC = ({ children }) => {
                   >
                     <span className="sr-only">카카오 로그인</span>
                     <Image
-                      src="/static/images/kakao_login_medium.png"
-                      alt=""
+                      src={kakaoLoginImg}
+                      alt="카카오 로그인"
                       width={90}
                       height={45}
                     />
