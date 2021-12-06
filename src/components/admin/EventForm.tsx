@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { PlusIcon, SearchIcon, XIcon } from '@heroicons/react/solid';
 import { zodResolver } from '@hookform/resolvers/zod/dist/zod';
 import { formatISO, set } from 'date-fns';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useFieldArray, useForm, UseFormSetValue } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useRecoilState } from 'recoil';
@@ -260,41 +260,11 @@ export default function EventForm({ edit }: EventFormProps) {
                 }}
               />
               {placeDocs && (
-                <>
-                  <div
-                    className="fixed inset-0 z-10 w-screen h-screen"
-                    onClick={() => setPlaceDocs(undefined)}
-                  />
-                  <ul
-                    className="absolute max-w-full z-20 bg-white rounded-md w-96 shadow divide-y divide-gray-100 divide-solid"
-                    style={{ inset: '61px 0 auto 0' }}
-                  >
-                    {placeDocs.length > 1 ? (
-                      placeDocs.map((doc) => (
-                        <li key={doc.id}>
-                          <button
-                            type="button"
-                            className="flex flex-col py-2 px-4 w-full"
-                            onClick={() => {
-                              setValue('place.name', doc.placeName);
-                              setValue('place.lat', Number(doc.y));
-                              setValue('place.lng', Number(doc.x));
-                              setValue('place.id', Number(doc.id));
-                              setPlaceDocs(undefined);
-                            }}
-                          >
-                            <div>{doc.placeName}</div>
-                            <div className="text-sm text-gray-500">
-                              {doc.addressName}
-                            </div>
-                          </button>
-                        </li>
-                      ))
-                    ) : (
-                      <li className="py-4 px-4">검색결과 없음</li>
-                    )}
-                  </ul>
-                </>
+                <SearchList
+                  placeDocs={placeDocs}
+                  setPlaceDocs={setPlaceDocs}
+                  setValue={setValue}
+                />
               )}
             </div>
             <div className="mt-2 flex flex-col space-y-2 max-w-full">
@@ -412,6 +382,50 @@ export default function EventForm({ edit }: EventFormProps) {
         </form>
       </div>
     </section>
+  );
+}
+
+interface SearchListProps {
+  placeDocs: KakaoPlaceDocument[];
+  setPlaceDocs: (placeDocs: KakaoPlaceDocument[] | undefined) => void;
+  setValue: UseFormSetValue<FormValues>;
+}
+
+function SearchList({ placeDocs, setPlaceDocs, setValue }: SearchListProps) {
+  // click away listener
+  useEffect(() => {
+    const hide = () => setPlaceDocs(undefined);
+    window.addEventListener('click', hide);
+    return () => window.removeEventListener('click', hide);
+  }, [setPlaceDocs]);
+
+  return (
+    <ul
+      className="absolute max-w-full z-20 bg-white rounded-md w-96 shadow divide-y divide-gray-100 divide-solid"
+      style={{ inset: '61px 0 auto 0' }}
+    >
+      {placeDocs.length > 1 ? (
+        placeDocs.map((doc) => (
+          <li key={doc.id}>
+            <button
+              type="button"
+              className="flex flex-col py-2 px-4 w-full"
+              onClick={() => {
+                setValue('place.name', doc.placeName);
+                setValue('place.lat', Number(doc.y));
+                setValue('place.lng', Number(doc.x));
+                setValue('place.id', Number(doc.id));
+              }}
+            >
+              <div>{doc.placeName}</div>
+              <div className="text-sm text-gray-500">{doc.addressName}</div>
+            </button>
+          </li>
+        ))
+      ) : (
+        <li className="py-4 px-4">검색결과 없음</li>
+      )}
+    </ul>
   );
 }
 

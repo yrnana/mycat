@@ -87,25 +87,28 @@ export default function EventDetail() {
       </div>
       <div className="mt-6 lg:mt-0 lg:flex-grow">
         <h2 className="font-bold text-2xl sm:text-3xl mb-6">{name}</h2>
-        <div className="grid grid-cols-table gap-x-4 gap-y-2 text-lg">
+        <div className="grid grid-cols-1 sm:grid-cols-table gap-x-4 gap-y-2 text-lg">
           {homepage && (
             <>
               <div className="font-bold">홈페이지</div>
               <div>
-                <a href={homepage} className="text-sky-400 hover:text-sky-500">
+                <a
+                  href={homepage}
+                  className="break-all text-sky-400 hover:text-sky-500"
+                >
                   {homepage}
                 </a>
               </div>
             </>
           )}
-          <div className="font-bold">장소</div>
+          <div className="font-bold mt-2 sm:mt-0">장소</div>
           <div>
             {place.name}
             {placeDetail ? ` ${placeDetail}` : ''}
           </div>
-          <div className="font-bold">기간</div>
+          <div className="font-bold mt-2 sm:mt-0">기간</div>
           <div>{date}</div>
-          <div className="font-bold">시간</div>
+          <div className="font-bold mt-2 sm:mt-0">시간</div>
           <div className="whitespace-pre-line">
             {typeof times === 'string' ? times : times.join(`\n`)}
           </div>
