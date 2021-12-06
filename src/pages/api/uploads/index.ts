@@ -1,6 +1,7 @@
 import multer from 'multer';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import nc from 'next-connect';
+import { allowAdminOnly } from '~/helpers/middleware';
 
 const outputDir = './public/uploads';
 
@@ -24,6 +25,8 @@ const handler = nc<NextApiRequest, NextApiResponse>({
     res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
   },
 });
+
+handler.use(allowAdminOnly);
 
 handler.use(upload.array('files'));
 

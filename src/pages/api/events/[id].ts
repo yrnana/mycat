@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import nc from 'next-connect';
 import type {
@@ -6,6 +6,7 @@ import type {
   GetEventResponse,
   PostEventsRequestBody,
 } from '~/@types';
+import { allowAdminOnly } from '~/helpers/middleware';
 import { prisma } from '~/helpers/prisma';
 
 const handler = nc<NextApiRequest, NextApiResponse>({
@@ -45,6 +46,8 @@ handler.get(
     }
   },
 );
+
+handler.use(allowAdminOnly);
 
 // PUT /api/events/:id
 handler.put(

@@ -8,6 +8,7 @@ import type {
   GetEventsResponse,
   PostEventsRequestBody,
 } from '~/@types';
+import { allowAdminOnly } from '~/helpers/middleware';
 import { prisma } from '~/helpers/prisma';
 
 const handler = nc<NextApiRequest, NextApiResponse>({
@@ -39,6 +40,8 @@ handler.get(
     res.json(sortBy(result, (v) => v.dates[0].startTime));
   },
 );
+
+handler.use(allowAdminOnly);
 
 // POST /api/events
 handler.post(
