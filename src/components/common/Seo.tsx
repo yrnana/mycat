@@ -13,21 +13,29 @@ export default function Seo({
   title = 'My Cat',
   description,
   url,
-  image = `/static/images/placeholder.jpg`,
+  image = `/static/images/default.jpg`,
 }: SeoProps) {
   const { asPath } = useRouter();
 
   return (
     <Head>
       <title>{title}</title>
-      <meta property="og:title" content={title} />
+      <link
+        rel="canonical"
+        href={url || `${NEXT_PUBLIC_VERCEL_URL}${asPath}`}
+      />
       {description && <meta name="description" content={description} />}
       <meta property="og:type" content="website" />
+      <meta property="og:title" content={title} />
+      {description && <meta property="og:description" content={description} />}
       <meta
         property="og:url"
         content={url || `${NEXT_PUBLIC_VERCEL_URL}${asPath}`}
       />
       <meta property="og:image" content={`${NEXT_PUBLIC_VERCEL_URL}${image}`} />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={title} />{' '}
+      {description && <meta name="twitter:description" content={description} />}
     </Head>
   );
 }

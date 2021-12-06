@@ -88,17 +88,16 @@ export default function EventDetail() {
     }
   };
 
-  const imageSrc = image || '/static/images/placeholder.jpg';
+  const imageSrc = image || '/static/images/default.jpg';
 
   const share = () => {
     const shareUrl = `${NEXT_PUBLIC_VERCEL_URL}${asPath}`;
-    const imageUrl = `${NEXT_PUBLIC_VERCEL_URL}${imageSrc}`;
     Kakao?.Link?.sendDefault({
       objectType: 'feed',
       content: {
         title: name,
         description: date,
-        imageUrl,
+        imageUrl: `${NEXT_PUBLIC_VERCEL_URL}${imageSrc}`,
         link: {
           webUrl: shareUrl,
           mobileWebUrl: shareUrl,
