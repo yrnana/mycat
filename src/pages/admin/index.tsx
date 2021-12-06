@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { Tab } from '@headlessui/react';
 import { Role } from '@prisma/client';
 import cx from 'classnames';
@@ -33,11 +34,11 @@ export default function Admin() {
             </Tab>
           ))}
         </Tab.List>
-        <Tab.Panels>
-          <Tab.Panel>
+        <Tab.Panels as={Fragment}>
+          <Tab.Panel className="outline-none">
             <EventForm />
           </Tab.Panel>
-          <Tab.Panel>
+          <Tab.Panel className="outline-none">
             <EventList />
             <EventForm edit />
           </Tab.Panel>

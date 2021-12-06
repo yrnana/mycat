@@ -1,3 +1,5 @@
+export const isClient = typeof window !== 'undefined';
+
 export const DATABASE_URL = process.env.DATABASE_URL;
 export const KAKAO_CLIENT_ID = process.env.KAKAO_CLIENT_ID;
 export const KAKAO_CLIENT_SECRET = process.env.KAKAO_CLIENT_SECRET;

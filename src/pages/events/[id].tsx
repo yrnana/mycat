@@ -101,6 +101,8 @@ export default function EventDetail() {
                   <a
                     href={homepage}
                     className="break-all text-sky-400 hover:text-sky-500"
+                    target="_blank"
+                    rel="noreferrer"
                   >
                     {homepage}
                   </a>
