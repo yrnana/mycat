@@ -5,9 +5,14 @@ import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import Script from 'next/script';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 import type { DehydratedState } from 'react-query';
 import { getEvent } from '~/helpers/api';
+import {
+  NEXT_PUBLIC_KAKAO_JS_APP_KEY,
+  NEXT_PUBLIC_VERCEL_URL,
+} from '~/helpers/constants';
 
 type Props = {
   dehydratedState: DehydratedState;
@@ -18,8 +23,8 @@ type Params = {
 };
 
 export default function EventDetail() {
-  const router = useRouter();
-  const eventId = router.query.id as Params['id'];
+  const { asPath, query } = useRouter();
+  const eventId = query.id as Params['id'];
 
   const { data } = useQuery(['event', eventId], () => getEvent(eventId));
   const { image, dates, name, place, placeDetail, homepage } = data!;
@@ -74,16 +79,50 @@ export default function EventDetail() {
     });
   }, [dates]);
 
+  const initKakao = () => {
+    if (!Kakao?.isInitialized()) {
+      Kakao?.init(NEXT_PUBLIC_KAKAO_JS_APP_KEY);
+    }
+  };
+
+  const imageSrc = image || '/static/images/placeholder.jpg';
+
+  const share = () => {
+    const webUrl = `${NEXT_PUBLIC_VERCEL_URL}/${asPath}`;
+    Kakao?.Link?.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: name,
+        imageUrl: `${NEXT_PUBLIC_VERCEL_URL}${imageSrc}`,
+        link: {
+          webUrl,
+        },
+      },
+      buttons: [
+        {
+          title: '자세히 보기',
+          link: {
+            webUrl,
+          },
+        },
+      ],
+    });
+  };
+
   return (
     <>
       <Head>
         <title>{name} : My Cat</title>
         <meta name="description" content={name} />
       </Head>
+      <Script
+        src="https://developers.kakao.com/sdk/js/kakao.min.js"
+        onLoad={initKakao}
+      />
       <div className="flex flex-col lg:flex-row lg:space-x-10">
         <div className="relative transition-height duration-300 unset-img lg:w-2/5 lg:flex-shrink-0">
           <Image
-            src={image || '/static/images/placeholder.jpg'}
+            src={imageSrc}
             alt=""
             layout="fill"
             objectFit="contain"
@@ -119,6 +158,20 @@ export default function EventDetail() {
             <div className="font-bold mt-2 sm:mt-0">시간</div>
             <div className="whitespace-pre-line">
               {typeof times === 'string' ? times : times.join(`\n`)}
+            </div>
+            <div className="sm:col-span-2 mt-2">
+              <button
+                className="inline-flex items-center justify-center"
+                onClick={share}
+              >
+                <span className="sr-only">카카오 공유하기</span>
+                <Image
+                  src="/static/images/kakaolink_btn_medium.png"
+                  alt=""
+                  width={68}
+                  height={69}
+                />
+              </button>
             </div>
           </div>
         </div>

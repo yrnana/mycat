@@ -4,6 +4,7 @@ namespace NodeJS {
     DATABASE_URL: string;
     KAKAO_CLIENT_ID: string;
     NEXT_PUBLIC_KAKAO_CLIENT_ID: string;
+    NEXT_PUBLIC_KAKAO_JS_APP_KEY: string;
     KAKAO_CLIENT_SECRET: string;
     SECRET: string;
     VERCEL_URL: string;
