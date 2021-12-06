@@ -306,7 +306,10 @@ export default function EventForm({ edit }: EventFormProps) {
           <FormControl>
             <Label required>날짜 및 시간</Label>
             {fields.map((field, fieldIdx) => (
-              <div key={field.id} className="flex items-start space-x-4">
+              <div
+                key={field.id}
+                className="flex flex-wrap flex-col lg:flex-row items-start lg:space-x-4 mt-2 mb-4 lg:mt-0 lg:mb-0"
+              >
                 <FormControl nested>
                   <Label required htmlFor={`dates.${fieldIdx}.startTime`}>
                     시작 시간
@@ -336,7 +339,7 @@ export default function EventForm({ edit }: EventFormProps) {
                 </FormControl>
                 <Button
                   type="button"
-                  className="!min-w-0 w-10 mt-10"
+                  className="!min-w-0 w-10 lg:mt-10"
                   onClick={() => remove(fieldIdx)}
                 >
                   <XIcon className="h-5 w-5" />
@@ -368,7 +371,7 @@ export default function EventForm({ edit }: EventFormProps) {
             <Label>이미지</Label>
             <FileInput type="file" accept="image/*" {...register('images')} />
           </FormControl>
-          <div className="flex space-x-4">
+          <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0">
             <Button type="submit">{edit ? '수정' : '등록'}</Button>
             <Button type="button" color="secondary" onClick={onReset}>
               초기화
@@ -431,6 +434,7 @@ function SearchList({ placeDocs, setPlaceDocs, setValue }: SearchListProps) {
 
 const FileInput = styled.input`
   cursor: pointer;
+  max-width: 100%;
   &::-webkit-file-upload-button {
     visibility: hidden;
     width: 0px;
