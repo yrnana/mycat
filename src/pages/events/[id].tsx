@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { format } from 'date-fns';
 import ko from 'date-fns/locale/ko';
 import type { GetServerSideProps } from 'next';
+import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
@@ -74,47 +75,53 @@ export default function EventDetail() {
   }, [dates]);
 
   return (
-    <div className="flex flex-col lg:flex-row lg:space-x-10">
-      <div className="relative transition-height duration-300 unset-img lg:w-2/5 lg:flex-shrink-0">
-        <Image
-          src={image || '/static/images/placeholder.jpg'}
-          alt=""
-          layout="fill"
-          objectFit="contain"
-          quality={50}
-          priority
-        />
-      </div>
-      <div className="mt-6 lg:mt-0 lg:flex-grow">
-        <h2 className="font-bold text-2xl sm:text-3xl mb-6">{name}</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-table gap-x-4 gap-y-2 text-lg">
-          {homepage && (
-            <>
-              <div className="font-bold">홈페이지</div>
-              <div>
-                <a
-                  href={homepage}
-                  className="break-all text-sky-400 hover:text-sky-500"
-                >
-                  {homepage}
-                </a>
-              </div>
-            </>
-          )}
-          <div className="font-bold mt-2 sm:mt-0">장소</div>
-          <div>
-            {place.name}
-            {placeDetail ? ` ${placeDetail}` : ''}
-          </div>
-          <div className="font-bold mt-2 sm:mt-0">기간</div>
-          <div>{date}</div>
-          <div className="font-bold mt-2 sm:mt-0">시간</div>
-          <div className="whitespace-pre-line">
-            {typeof times === 'string' ? times : times.join(`\n`)}
+    <>
+      <Head>
+        <title>{name} : My Cat</title>
+        <meta name="description" content={name} />
+      </Head>
+      <div className="flex flex-col lg:flex-row lg:space-x-10">
+        <div className="relative transition-height duration-300 unset-img lg:w-2/5 lg:flex-shrink-0">
+          <Image
+            src={image || '/static/images/placeholder.jpg'}
+            alt=""
+            layout="fill"
+            objectFit="contain"
+            quality={50}
+            priority
+          />
+        </div>
+        <div className="mt-6 lg:mt-0 lg:flex-grow">
+          <h2 className="font-bold text-2xl sm:text-3xl mb-6">{name}</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-table gap-x-4 gap-y-2 text-lg">
+            {homepage && (
+              <>
+                <div className="font-bold">홈페이지</div>
+                <div>
+                  <a
+                    href={homepage}
+                    className="break-all text-sky-400 hover:text-sky-500"
+                  >
+                    {homepage}
+                  </a>
+                </div>
+              </>
+            )}
+            <div className="font-bold mt-2 sm:mt-0">장소</div>
+            <div>
+              {place.name}
+              {placeDetail ? ` ${placeDetail}` : ''}
+            </div>
+            <div className="font-bold mt-2 sm:mt-0">기간</div>
+            <div>{date}</div>
+            <div className="font-bold mt-2 sm:mt-0">시간</div>
+            <div className="whitespace-pre-line">
+              {typeof times === 'string' ? times : times.join(`\n`)}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

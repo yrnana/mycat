@@ -40,7 +40,7 @@ const Layout: React.FC = ({ children }) => {
                     쇼핑몰
                   </ActiveLink>
                   {data?.role === Role.ADMIN && (
-                    <ActiveLink href="/admin/events">관리자</ActiveLink>
+                    <ActiveLink href="/admin">관리자</ActiveLink>
                   )}
                 </div>
                 {authenticated ? (
@@ -81,7 +81,7 @@ const Layout: React.FC = ({ children }) => {
                   쇼핑몰
                 </Disclosure.Button>
                 {data?.role === Role.ADMIN && (
-                  <Disclosure.Button as={ActiveLink} href="/admin/events">
+                  <Disclosure.Button as={ActiveLink} href="/admin">
                     관리자
                   </Disclosure.Button>
                 )}
