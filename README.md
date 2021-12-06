@@ -2,14 +2,14 @@
 
 ## 할일
 
-- [ ] form
-  - [ ] create
-  - [ ] edit
-  - [ ] delete
+- [x] form
+  - [x] create
+  - [x] edit
+  - [x] delete
 - [ ] map
 - [ ] share
 - [ ] shop
-- [ ] auth - kakao
+- [x] auth - kakao
 
 ## Tip
 
