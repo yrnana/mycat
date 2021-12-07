@@ -7,8 +7,8 @@ import type {
   PostUploadsResponse,
 } from '~/@types';
 import {
+  NEXT_PUBLIC_BASE_URL,
   NEXT_PUBLIC_KAKAO_CLIENT_ID,
-  NEXT_PUBLIC_VERCEL_URL,
 } from '~/helpers/constants';
 import { toCamelCase } from '~/helpers/utils';
 
@@ -41,21 +41,21 @@ export async function getPlaceByKeyword(keyword: string) {
 
 export async function getEvents() {
   const { data } = await axios.get<GetEventsResponse>(
-    `${NEXT_PUBLIC_VERCEL_URL}/api/events`,
+    `${NEXT_PUBLIC_BASE_URL}/api/events`,
   );
   return data;
 }
 
 export async function getEvent(eventId: string) {
   const { data } = await axios.get<GetEventResponse>(
-    `${NEXT_PUBLIC_VERCEL_URL}/api/events/${eventId}`,
+    `${NEXT_PUBLIC_BASE_URL}/api/events/${eventId}`,
   );
   return data;
 }
 
 export async function postEvent(event: PostEventsRequestBody) {
   const { data } = await axios.post<GetEventResponse>(
-    `${NEXT_PUBLIC_VERCEL_URL}/api/events`,
+    `${NEXT_PUBLIC_BASE_URL}/api/events`,
     event,
   );
   return data;
@@ -64,14 +64,14 @@ export async function postEvent(event: PostEventsRequestBody) {
 export async function putEvent(event: PostEventsRequestBody) {
   const eventId = event.event.id!;
   const { data } = await axios.put<GetEventResponse>(
-    `${NEXT_PUBLIC_VERCEL_URL}/api/events/${eventId}`,
+    `${NEXT_PUBLIC_BASE_URL}/api/events/${eventId}`,
     event,
   );
   return data;
 }
 
 export async function deleteEvent(eventId: string) {
-  await axios.delete(`${NEXT_PUBLIC_VERCEL_URL}/api/events/${eventId}`);
+  await axios.delete(`${NEXT_PUBLIC_BASE_URL}/api/events/${eventId}`);
 }
 
 export async function postUpload({
@@ -88,7 +88,7 @@ export async function postUpload({
   });
 
   const { data } = await axios.post<PostUploadsResponse>(
-    `${NEXT_PUBLIC_VERCEL_URL}/api/uploads`,
+    `${NEXT_PUBLIC_BASE_URL}/api/uploads`,
     formData,
     {
       headers: { 'content-type': 'multipart/form-data' },

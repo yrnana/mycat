@@ -7,7 +7,7 @@ import type {
   GetEventResponse,
   PostEventsRequestBody,
 } from '~/@types';
-import { VERCEL_URL } from '~/helpers/constants';
+import { NEXT_PUBLIC_BASE_URL } from '~/helpers/constants';
 import { allowAdminOnly } from '~/helpers/middleware';
 import { prisma } from '~/helpers/prisma';
 
@@ -81,9 +81,12 @@ handler.put(
     };
 
     if (event.image) {
-      const { base64 } = await getPlaiceholder(`${VERCEL_URL}${event.image}`, {
-        size: 10,
-      });
+      const { base64 } = await getPlaiceholder(
+        `${NEXT_PUBLIC_BASE_URL}${event.image}`,
+        {
+          size: 10,
+        },
+      );
       data.placeholder = Buffer.from(base64);
     }
 

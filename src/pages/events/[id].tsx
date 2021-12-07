@@ -10,8 +10,8 @@ import type { DehydratedState } from 'react-query';
 import Seo from '~/components/common/Seo';
 import { getEvent } from '~/helpers/api';
 import {
+  NEXT_PUBLIC_BASE_URL,
   NEXT_PUBLIC_KAKAO_JS_APP_KEY,
-  NEXT_PUBLIC_VERCEL_URL,
   placeholderBase64,
 } from '~/helpers/constants';
 import placeholderImg from '~/public/static/images/placeholder.jpg';
@@ -94,13 +94,13 @@ export default function EventDetail() {
   const imageSrc = image || '/static/images/default.jpg';
 
   const share = () => {
-    const shareUrl = `${NEXT_PUBLIC_VERCEL_URL}${asPath}`;
+    const shareUrl = `${NEXT_PUBLIC_BASE_URL}${asPath}`;
     Kakao?.Link?.sendDefault({
       objectType: 'feed',
       content: {
         title: name,
         description: date,
-        imageUrl: `${NEXT_PUBLIC_VERCEL_URL}${imageSrc}`,
+        imageUrl: `${NEXT_PUBLIC_BASE_URL}${imageSrc}`,
         link: {
           webUrl: shareUrl,
           mobileWebUrl: shareUrl,
