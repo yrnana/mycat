@@ -1,6 +1,8 @@
 import type { Event, EventDate, Place, Prisma } from '@prisma/client';
 
-export type GetEventResponse = Event & {
+export type GetEventResponse = Omit<Event, 'placeholder'> & {
+  placeholder: string | null;
+} & {
   dates: EventDate[];
   place: Place;
 };

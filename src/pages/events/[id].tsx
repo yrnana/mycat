@@ -12,8 +12,10 @@ import { getEvent } from '~/helpers/api';
 import {
   NEXT_PUBLIC_KAKAO_JS_APP_KEY,
   NEXT_PUBLIC_VERCEL_URL,
+  placeholderBase64,
 } from '~/helpers/constants';
 import placeholderImg from '~/public/static/images/placeholder.jpg';
+import kakaoLinkImg from '~/public/static/images/kakaolink_btn_medium.png';
 
 type Props = {
   dehydratedState: DehydratedState;
@@ -30,7 +32,8 @@ export default function EventDetail() {
   const { data } = useQuery(['event', eventId], () => getEvent(eventId), {
     staleTime: 1000 * 60 * 3,
   });
-  const { image, dates, name, place, placeDetail, homepage } = data!;
+  const { image, placeholder, dates, name, place, placeDetail, homepage } =
+    data!;
 
   const date = useMemo(() => {
     const startDate = new Date(dates[0].startTime);
@@ -126,6 +129,8 @@ export default function EventDetail() {
         <div className="relative transition-height duration-300 unset-img lg:w-2/5 lg:flex-shrink-0">
           <Image
             src={image || placeholderImg}
+            blurDataURL={placeholder || placeholderBase64}
+            placeholder="blur"
             alt=""
             layout="fill"
             objectFit="contain"
@@ -164,12 +169,7 @@ export default function EventDetail() {
                 onClick={share}
               >
                 <span className="sr-only">카카오 공유하기</span>
-                <Image
-                  src="/static/images/kakaolink_btn_medium.png"
-                  alt=""
-                  width={68}
-                  height={69}
-                />
+                <Image src={kakaoLinkImg} alt="" width={68} height={69} />
               </button>
             </div>
           </div>

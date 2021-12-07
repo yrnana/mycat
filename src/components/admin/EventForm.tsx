@@ -59,7 +59,7 @@ const schema: z.ZodSchema<FormValues> = z.object({
       }),
     )
     .nonempty(),
-  image: z.any().optional(),
+  images: z.any().optional(),
 });
 
 type EventFormProps = {
@@ -88,23 +88,6 @@ export default function EventForm({ edit }: EventFormProps) {
       enabled: !!eventId,
       keepPreviousData: true,
       staleTime: 1000 * 60 * 3,
-      onSuccess: ({ name, homepage, place, placeDetail, dates }) => {
-        setValue('name', name);
-        setValue('homepage', homepage);
-        setValue('place.name', place.name);
-        setValue('place.lat', place.lat);
-        setValue('place.lng', place.lng);
-        setValue('place.id', place.id);
-        placeDetail && setValue('place.detail', placeDetail);
-        setValue(
-          'dates',
-          dates.map(({ startTime, endTime, closingTime }) => ({
-            startTime: new Date(startTime),
-            endTime: new Date(endTime),
-            closingTime: closingTime ? new Date(closingTime) : undefined,
-          })),
-        );
-      },
     },
   );
 
@@ -112,6 +95,28 @@ export default function EventForm({ edit }: EventFormProps) {
     remove();
     reset();
   }, [remove, reset]);
+
+  useEffect(() => {
+    if (data) {
+      const { name, homepage, place, placeDetail, dates } = data;
+      setValue('name', name);
+      setValue('homepage', homepage);
+      setValue('place.name', place.name);
+      setValue('place.lat', place.lat);
+      setValue('place.lng', place.lng);
+      setValue('place.id', place.id);
+      placeDetail && setValue('place.detail', placeDetail);
+      setValue(
+        'dates',
+        dates.map(({ startTime, endTime, closingTime }) => ({
+          startTime: new Date(startTime),
+          endTime: new Date(endTime),
+          closingTime: closingTime ? new Date(closingTime) : undefined,
+        })),
+      );
+      setValue('images', undefined);
+    }
+  }, [data, reset, setValue]);
 
   useEffect(() => {
     return () => {

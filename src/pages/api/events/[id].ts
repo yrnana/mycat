@@ -1,11 +1,13 @@
 import type { Prisma } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import nc from 'next-connect';
+import { getPlaiceholder } from 'plaiceholder';
 import type {
   ErrorResponse,
   GetEventResponse,
   PostEventsRequestBody,
 } from '~/@types';
+import { VERCEL_URL } from '~/helpers/constants';
 import { allowAdminOnly } from '~/helpers/middleware';
 import { prisma } from '~/helpers/prisma';
 
@@ -40,7 +42,12 @@ handler.get(
     });
 
     if (result) {
-      res.json(result);
+      res.json({
+        ...result,
+        placeholder: result.placeholder
+          ? Buffer.from(result.placeholder).toString()
+          : null,
+      });
     } else {
       res.status(404).json({ error: true });
     }
@@ -72,6 +79,13 @@ handler.put(
         },
       },
     };
+
+    if (event.image) {
+      const { base64 } = await getPlaiceholder(`${VERCEL_URL}${event.image}`, {
+        size: 10,
+      });
+      data.placeholder = Buffer.from(base64);
+    }
 
     const result = (await prisma.event.update({
       where: {

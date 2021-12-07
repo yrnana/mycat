@@ -8,6 +8,7 @@ import type { DehydratedState } from 'react-query';
 import type { GetEventResponse } from '~/@types';
 import Seo from '~/components/common/Seo';
 import { getEvents } from '~/helpers/api';
+import { placeholderBase64 } from '~/helpers/constants';
 import placeholderImg from '~/public/static/images/placeholder.jpg';
 import useEventsQuery from '~/queries/useEventsQuery';
 
@@ -30,7 +31,14 @@ export default function Home() {
   );
 }
 
-const EventItem = ({ id, image, name, place, dates }: GetEventResponse) => {
+const EventItem = ({
+  id,
+  image,
+  name,
+  place,
+  dates,
+  placeholder,
+}: GetEventResponse) => {
   const date = useMemo(() => {
     const formatStr = 'yyyy.MM.dd';
     const startDate = new Date(dates[0].startTime);
@@ -48,6 +56,8 @@ const EventItem = ({ id, image, name, place, dates }: GetEventResponse) => {
               <div className="relative transition-height duration-300 h-52 xs:h-60 sm:h-96">
                 <Image
                   src={image || placeholderImg}
+                  blurDataURL={placeholder || placeholderBase64}
+                  placeholder="blur"
                   alt=""
                   layout="fill"
                   objectFit="cover"

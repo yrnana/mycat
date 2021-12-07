@@ -75,5 +75,6 @@ model Event {
   place       Place       @relation(fields: [placeId], references: [id])
   placeDetail String?
   image       String?
+  placeholder Bytes?
   dates       EventDate[]
 }

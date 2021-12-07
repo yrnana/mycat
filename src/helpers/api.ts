@@ -54,21 +54,24 @@ export async function getEvent(eventId: string) {
 }
 
 export async function postEvent(event: PostEventsRequestBody) {
-  const { data } = await axios.post<GetEventResponse>('/api/events', event);
+  const { data } = await axios.post<GetEventResponse>(
+    `${NEXT_PUBLIC_VERCEL_URL}/api/events`,
+    event,
+  );
   return data;
 }
 
 export async function putEvent(event: PostEventsRequestBody) {
   const eventId = event.event.id!;
   const { data } = await axios.put<GetEventResponse>(
-    `/api/events/${eventId}`,
+    `${NEXT_PUBLIC_VERCEL_URL}/api/events/${eventId}`,
     event,
   );
   return data;
 }
 
 export async function deleteEvent(eventId: string) {
-  await axios.delete(`/api/events/${eventId}`);
+  await axios.delete(`${NEXT_PUBLIC_VERCEL_URL}/api/events/${eventId}`);
 }
 
 export async function postUpload({
@@ -85,7 +88,7 @@ export async function postUpload({
   });
 
   const { data } = await axios.post<PostUploadsResponse>(
-    '/api/uploads',
+    `${NEXT_PUBLIC_VERCEL_URL}/api/uploads`,
     formData,
     {
       headers: { 'content-type': 'multipart/form-data' },
