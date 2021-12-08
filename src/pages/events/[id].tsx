@@ -8,6 +8,7 @@ import { dehydrate, QueryClient, useQuery } from 'react-query';
 import type { DehydratedState } from 'react-query';
 import KakaoSdk from '~/components/common/KakaoSdk';
 import Seo from '~/components/common/Seo';
+import KakaoMap from '~/components/events/KakaoMap';
 import KakaoShare from '~/components/events/KakaoShare';
 import { getEvent } from '~/helpers/api';
 import { NEXT_PUBLIC_BASE_URL, placeholderBase64 } from '~/helpers/constants';
@@ -100,7 +101,7 @@ export default function EventDetail() {
             priority
           />
         </div>
-        <div className="mt-6 lg:mt-0 lg:flex-grow">
+        <div className="mt-6 lg:mt-0 lg:flex-grow flex flex-col">
           <h2 className="font-bold text-2xl sm:text-3xl mb-6">{name}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-table gap-x-4 gap-y-2 text-lg">
             <div className="font-bold">홈페이지</div>
@@ -125,14 +126,17 @@ export default function EventDetail() {
             <div className="whitespace-pre-line">
               {typeof times === 'string' ? times : times.join(`\n`)}
             </div>
-            <div className="sm:col-span-2 mt-2">
-              <KakaoShare
-                title={name}
-                description={date}
-                imageUrl={`${NEXT_PUBLIC_BASE_URL}${imageSrc}`}
-                shareUrl={`${NEXT_PUBLIC_BASE_URL}${asPath}`}
-              />
-            </div>
+          </div>
+          <div className="mt-4">
+            <KakaoShare
+              title={name}
+              description={date}
+              imageUrl={`${NEXT_PUBLIC_BASE_URL}${imageSrc}`}
+              shareUrl={`${NEXT_PUBLIC_BASE_URL}${asPath}`}
+            />
+          </div>
+          <div className="mt-4 flex-grow">
+            <KakaoMap {...place} />
           </div>
         </div>
       </div>
