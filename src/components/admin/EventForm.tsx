@@ -69,11 +69,18 @@ type EventFormProps = {
 export default function EventForm({ edit }: EventFormProps) {
   const queryClient = useQueryClient();
 
-  const { control, register, handleSubmit, getValues, setValue, reset } =
-    useForm<FormValues>({
-      resolver: zodResolver(schema),
-      shouldUseNativeValidation: true,
-    });
+  const {
+    control,
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    shouldUseNativeValidation: true,
+  });
 
   const { fields, append, remove } = useFieldArray({
     name: 'dates',
@@ -378,12 +385,23 @@ export default function EventForm({ edit }: EventFormProps) {
             <FileInput type="file" accept="image/*" {...register('images')} />
           </FormControl>
           <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0">
-            <Button type="submit">{edit ? '수정' : '등록'}</Button>
-            <Button type="button" color="secondary" onClick={onReset}>
+            <Button type="submit" disabled={isSubmitting}>
+              {edit ? '수정' : '등록'}
+            </Button>
+            <Button
+              type="button"
+              color="secondary"
+              onClick={onReset}
+              disabled={isSubmitting}
+            >
               초기화
             </Button>
             {edit && eventId && (
-              <Button type="button" onClick={() => removeEvent(eventId)}>
+              <Button
+                type="button"
+                onClick={() => removeEvent(eventId)}
+                disabled={isSubmitting}
+              >
                 삭제
               </Button>
             )}
