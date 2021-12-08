@@ -4,18 +4,14 @@ import ko from 'date-fns/locale/ko';
 import type { GetServerSideProps } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import Script from 'next/script';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
 import type { DehydratedState } from 'react-query';
+import KakaoSdk from '~/components/common/KakaoSdk';
 import Seo from '~/components/common/Seo';
+import KakaoShare from '~/components/events/KakaoShare';
 import { getEvent } from '~/helpers/api';
-import {
-  NEXT_PUBLIC_BASE_URL,
-  NEXT_PUBLIC_KAKAO_JS_APP_KEY,
-  placeholderBase64,
-} from '~/helpers/constants';
+import { NEXT_PUBLIC_BASE_URL, placeholderBase64 } from '~/helpers/constants';
 import placeholderImg from '~/public/static/images/placeholder.jpg';
-import kakaoLinkImg from '~/public/static/images/kakaolink_btn_medium.png';
 
 type Props = {
   dehydratedState: DehydratedState;
@@ -85,46 +81,12 @@ export default function EventDetail() {
     });
   }, [dates]);
 
-  const initKakao = () => {
-    if (!Kakao?.isInitialized()) {
-      Kakao?.init(NEXT_PUBLIC_KAKAO_JS_APP_KEY);
-    }
-  };
-
   const imageSrc = image || '/static/images/default.jpg';
-
-  const share = () => {
-    const shareUrl = `${NEXT_PUBLIC_BASE_URL}${asPath}`;
-    Kakao?.Link?.sendDefault({
-      objectType: 'feed',
-      content: {
-        title: name,
-        description: date,
-        imageUrl: `${NEXT_PUBLIC_BASE_URL}${imageSrc}`,
-        link: {
-          webUrl: shareUrl,
-          mobileWebUrl: shareUrl,
-        },
-      },
-      buttons: [
-        {
-          title: '자세히 보기',
-          link: {
-            webUrl: shareUrl,
-            mobileWebUrl: shareUrl,
-          },
-        },
-      ],
-    });
-  };
 
   return (
     <>
       <Seo title={`${name} : My Cat`} description={name} image={imageSrc} />
-      <Script
-        src="https://developers.kakao.com/sdk/js/kakao.min.js"
-        onLoad={initKakao}
-      />
+      <KakaoSdk />
       <div className="flex flex-col lg:flex-row lg:space-x-10">
         <div className="relative transition-height duration-300 unset-img lg:w-2/5 lg:flex-shrink-0">
           <Image
@@ -164,13 +126,12 @@ export default function EventDetail() {
               {typeof times === 'string' ? times : times.join(`\n`)}
             </div>
             <div className="sm:col-span-2 mt-2">
-              <button
-                className="inline-flex items-center justify-center"
-                onClick={share}
-              >
-                <span className="sr-only">카카오 공유하기</span>
-                <Image src={kakaoLinkImg} alt="" width={68} height={69} />
-              </button>
+              <KakaoShare
+                title={name}
+                description={date}
+                imageUrl={`${NEXT_PUBLIC_BASE_URL}${imageSrc}`}
+                shareUrl={`${NEXT_PUBLIC_BASE_URL}${asPath}`}
+              />
             </div>
           </div>
         </div>
